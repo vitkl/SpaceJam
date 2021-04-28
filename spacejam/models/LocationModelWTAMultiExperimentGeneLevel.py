@@ -30,11 +30,11 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
     as the sum of five non-negative components:
     
     .. math::
-        \mu_{s,g} = m_{g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
+        \mu_{s,g} = m_{e,g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
     
     Here, :math:`w_{s,f}` denotes regression weight of each program :math:`f` at location :math:`s` ;
     :math:`g_{f,g}` denotes the regulatory programmes :math:`f` of each gene :math:`g` - input to the model;
-    :math:`m_{g}` denotes a gene-specific scaling parameter which accounts for difference
+    :math:`m_{e,g}` denotes a gene-specific scaling parameter which accounts for difference
     in the global expression estimates between technologies;
     :math:`l_{s}` and :math:`s_{e,g}` are additive components that capture additive background variation
     that is not explained by the bi-variate decomposition.
@@ -223,7 +223,7 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
                                                 shape=(1, 1))
 
             self.gene_level = pm.Gamma('gene_level', self.gene_level_alpha_hyp,
-                                       self.gene_level_beta_hyp, shape=(self.n_genes, 1))
+                                       self.gene_level_beta_hyp, shape=(self.n_exper, self.n_genes))
 
             self.gene_factors = pm.Deterministic('gene_factors', self.cell_state)
 
@@ -275,7 +275,8 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
             # =====================Expected expression ======================= #
             # Expected counts for negative probes and gene probes concatenated into one array. Note that non-specific binding
             # scales linearly with the total number of counts (l_r) in this model.
-            self.mu_biol = tt.concatenate([self.y_rn, pm.math.dot(self.spot_factors, self.gene_factors.T) * self.gene_level.T \
+            self.mu_biol = tt.concatenate([self.y_rn, pm.math.dot(self.spot_factors, self.gene_factors.T) \
+                                           * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level) \
                                            + pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_add) * self.l_r \
                                            + self.spot_add], axis = 1)
 
@@ -301,7 +302,7 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
         # compute the poisson rate
         self.mu = (np.dot(self.samples['post_sample_means']['spot_factors'],
                           self.samples['post_sample_means']['gene_factors'].T)
-                   * self.samples['post_sample_means']['gene_level'].T
+                   * self.samples['post_sample_means']['gene_level']
                    + np.dot(self.extra_data['spot2sample'],
                             self.samples['post_sample_means']['gene_add']) * self.l_r
                    + self.samples['post_sample_means']['spot_add'])
