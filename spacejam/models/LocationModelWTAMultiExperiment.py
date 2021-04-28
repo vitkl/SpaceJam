@@ -18,25 +18,25 @@ from matplotlib.pyplot import figure
 from cell2location.models.base.pymc3_loc_model import Pymc3LocModel
 
 # defining the model itself
-class LocationModelWTA(Pymc3LocModel):
-    r""" Here we model the elements of :math:`D` as Poisson distributed,
-    given an unobserved rate :math:`mu` and a gene-specific over-dispersion parameter :math:`\alpha_g`
+class LocationModelWTAMultiExperiment(Pymc3LocModel):
+    r""" Here we model the elements of :math:`D` as Negative Binomial distributed,
+    given an unobserved rate :math:`mu` and a gene-specific over-dispersion parameter :math:`\alpha_{e,g}`
     which describes variance in expression of individual genes that is not explained by the regulatory programs:
     
     .. math::
-        D_{s,g} \sim \mathtt{Poisson}(\mu_{s,g})
+        D_{s,g} \sim \mathtt{NegativeBinomial}(\mu_{s,g}, \alpha_{e,g})
     
     The spatial expression levels of genes :math:`\mu_{s,g}` in the rate space are modelled
     as the sum of five non-negative components:
     
     .. math::
-        \mu_{s,g} = m_{g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{g}*totalCounts_s
+        \mu_{s,g} = m_{g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
     
     Here, :math:`w_{s,f}` denotes regression weight of each program :math:`f` at location :math:`s` ;
     :math:`g_{f,g}` denotes the regulatory programmes :math:`f` of each gene :math:`g` - input to the model;
     :math:`m_{g}` denotes a gene-specific scaling parameter which accounts for difference
     in the global expression estimates between technologies;
-    :math:`l_{s}` and :math:`s_{g}` are additive components that capture additive background variation
+    :math:`l_{s}` and :math:`s_{e,g}` are additive components that capture additive background variation
     that is not explained by the bi-variate decomposition.
     
     The prior distribution on :math:`w_{s,f}` is chosen to reflect the absolute scale and account for correlation of programs
@@ -177,6 +177,15 @@ class LocationModelWTA(Pymc3LocModel):
         for k in cell_number_var_prior.keys():
             cell_number_prior[k] = cell_number_var_prior[k]
         self.cell_number_prior = cell_number_prior
+        
+        # generate one-hot encoded parameters for samples
+        self.spot2sample_df = pd.get_dummies(sample_id)
+        # convert to np.ndarray
+        self.spot2sample_mat = self.spot2sample_df.values
+        self.n_exper = self.spot2sample_mat.shape[1]
+        # assign extra data to dictionary with (1) shared parameters (2) input data
+        self.extra_data_tt = {'spot2sample': theano.shared(self.spot2sample_mat.astype(self.data_type))}
+        self.extra_data = {'spot2sample': self.spot2sample_mat.astype(self.data_type)}
 
         ############# Define the model ################
         self.model = pm.Model()
@@ -187,14 +196,16 @@ class LocationModelWTA(Pymc3LocModel):
             # Negative probe counts scale linearly with the total number of counts in a region of interest.
             # The linear slope is drawn from a gamma distribution. Mean and variance are inferred from the data
             # and are the same for the non-specific binding term for gene probes further below.
-            self.b_n_hyper = pm.Gamma('b_n_hyper', alpha = np.array((3,1)), beta = np.array((1,1)), shape = 2)
-            self.b_n = pm.Gamma('b_n', mu = self.b_n_hyper[0], sigma = self.b_n_hyper[1], shape = (1,self.n_npro))
-            self.y_rn = self.b_n*self.l_r
+            self.b_n_hyper = pm.Gamma('b_n_hyper', alpha=np.array((3,1)), beta=np.array((1,1)), shape=2)
+            self.b_n = pm.Gamma('b_n', mu=self.b_n_hyper[0], sigma=self.b_n_hyper[1], 
+                                shape=(self.n_exper, self.n_npro))
+            self.y_rn = pm.math.dot(self.extra_data_tt['spot2sample'], self.b_n) * self.l_r
             
             # ===================== Non-specific binding additive component ======================= #
             # Additive term for non-specific binding of gene probes are drawn from a gamma distribution with
             # the same mean and variance as for negative probes above.
-            self.gene_add = pm.Gamma('gene_add', mu = self.b_n_hyper[0], sigma = self.b_n_hyper[1], shape = (1,self.n_genes))
+            self.gene_add = pm.Gamma('gene_add', mu=self.b_n_hyper[0], sigma=self.b_n_hyper[1], 
+                                     shape = (self.n_exper, self.n_genes))
 
             # =====================Gene expression level scaling======================= #
             # Explains difference in expression between genes and 
@@ -259,36 +270,43 @@ class LocationModelWTA(Pymc3LocModel):
             # =====================Gene-specific overdispersion ======================= #
             self.phi_hyp = pm.Gamma('phi_hyp', mu=phi_hyp_prior['mean'],
                                     sigma=phi_hyp_prior['sd'], shape=(1, 1))
-            self.gene_E = pm.Exponential('gene_E', self.phi_hyp, shape=(self.n_genes, 1))
+            self.gene_E = pm.Exponential('gene_E', self.phi_hyp, shape=(self.n_exper, self.n_genes))
 
             # =====================Expected expression ======================= #
             # Expected counts for negative probes and gene probes concatenated into one array. Note that non-specific binding
             # scales linearly with the total number of counts (l_r) in this model.
             self.mu_biol = tt.concatenate([self.y_rn, pm.math.dot(self.spot_factors, self.gene_factors.T) * self.gene_level.T \
-                                    + self.gene_add * self.l_r + self.spot_add], axis = 1)
+                                           + pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_add) * self.l_r \
+                                           + self.spot_add], axis = 1)
 
             # =====================DATA likelihood ======================= #
             # Likelihood (sampling distribution) of observations & add overdispersion via NegativeBinomial / Poisson
             self.data_target = pm.NegativeBinomial('data_target', mu=self.mu_biol,
                                alpha=tt.concatenate([np.repeat(10**10,self.n_npro).reshape(1, self.n_npro),
-                                                     1 / (self.gene_E.T * self.gene_E.T)], axis = 1),
+                                                     pm.math.dot(self.extra_data_tt['spot2sample'], 
+                                                                 1 / (self.gene_E * self.gene_E))],
+                                                    axis = 1),
                                observed=tt.concatenate([self.y_data, self.x_data], axis = 1))
 
             # =====================Compute nUMI from each factor in spots  ======================= #                          
             self.nUMI_factors = pm.Deterministic('nUMI_factors',
                                                  (self.spot_factors * (self.gene_factors * self.gene_level).sum(0)))
             
+        
     def compute_expected(self):
-        r"""Compute expected expression of each gene in each spot (Poisson mu). Useful for evaluating how well
-        the model learned expression pattern of all genes in the data.
+        r"""Compute expected expression of each gene in each spot (NB mu). Useful for evaluating how well
+            the model learned expression pattern of all genes in the data.
         """
 
         # compute the poisson rate
         self.mu = (np.dot(self.samples['post_sample_means']['spot_factors'],
-              self.samples['post_sample_means']['gene_factors'].T)
-        * self.samples['post_sample_means']['gene_level'].T
-        + self.samples['post_sample_means']['gene_add']*self.l_r
-        + self.samples['post_sample_means']['spot_add'])
+                          self.samples['post_sample_means']['gene_factors'].T)
+                   * self.samples['post_sample_means']['gene_level'].T
+                   + np.dot(self.extra_data['spot2sample'],
+                            self.samples['post_sample_means']['gene_add']) * self.l_r
+                   + self.samples['post_sample_means']['spot_add'])
+        self.alpha = np.dot(self.extra_data['spot2sample'],
+                            1 / (self.samples['post_sample_means']['gene_E'] * self.samples['post_sample_means']['gene_E']))
 
     def plot_Locations_1D_scatterPlot(self, x, order = None, polynomial_order = 6, figure_size = (30,30),
                                       saveFig = None, density = True, xlabel = 'x-coordinate'):
