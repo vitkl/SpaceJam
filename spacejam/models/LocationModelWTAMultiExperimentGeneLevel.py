@@ -293,7 +293,8 @@ class LocationModelWTAMultiExperimentGeneLevel(Pymc3LocModel):
             # =====================Compute nUMI from each factor in spots  ======================= #
             
             self.nUMI_factors = pm.Deterministic('nUMI_factors',
-                                                 (self.spot_factors * (self.gene_factors * self.gene_level).sum(0)))
+                                                 (self.spot_factors * (self.gene_factors 
+                                                                       * self.gene_level.mean(0).T).sum(0)))
             
         
     def compute_expected(self):
