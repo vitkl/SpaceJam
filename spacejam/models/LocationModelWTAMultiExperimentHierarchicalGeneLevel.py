@@ -221,9 +221,15 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
             self.gene_level_beta_hyp = pm.Gamma('gene_level_beta_hyp',
                                                 mu=rate, sigma=np.sqrt(rate_var),
                                                 shape=(1, 1))
-
+            # global per gene sensitivity, including platform effect
             self.gene_level = pm.Gamma('gene_level', self.gene_level_alpha_hyp,
-                                       self.gene_level_beta_hyp, shape=(self.n_exper, self.n_genes))
+                                       self.gene_level_beta_hyp, shape=(1, self.n_genes))
+            
+            # independent experiment-specific effect on each gene (narrow prior around 1)
+            self.gene_level_independent = pm.Gamma('gene_level_independent', 
+                                                   100, 100, shape=(self.n_exper, self.n_genes))
+            # experiment specific capture efficiency (wide prior around 1)
+            self.gene_level_e = pm.Gamma('gene_level_e', 5, 5, shape=(self.n_exper, 1))
 
             self.gene_factors = pm.Deterministic('gene_factors', self.cell_state)
 
@@ -276,7 +282,8 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
             # Expected counts for negative probes and gene probes concatenated into one array. Note that non-specific binding
             # scales linearly with the total number of counts (l_r) in this model.
             self.mu_biol = tt.concatenate([self.y_rn, pm.math.dot(self.spot_factors, self.gene_factors.T) \
-                                           * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level) \
+                                           * self.gene_level * self.gene_level_e \
+                                           * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level_independent) \
                                            + pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_add) * self.l_r \
                                            + self.spot_add], axis = 1)
 
@@ -303,6 +310,9 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
         self.mu = (np.dot(self.samples['post_sample_means']['spot_factors'],
                           self.samples['post_sample_means']['gene_factors'].T)
                    * self.samples['post_sample_means']['gene_level']
+                   * self.samples['post_sample_means']['gene_level_e']
+                   * np.dot(self.extra_data['spot2sample'],
+                            self.samples['post_sample_means']['gene_level_independent'])
                    + np.dot(self.extra_data['spot2sample'],
                             self.samples['post_sample_means']['gene_add']) * self.l_r
                    + self.samples['post_sample_means']['spot_add'])
