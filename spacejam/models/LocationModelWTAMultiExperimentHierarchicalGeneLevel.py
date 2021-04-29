@@ -14,11 +14,12 @@ import pymc3 as pm
 import theano
 import theano.tensor as tt
 from matplotlib.pyplot import figure
+import pandas as pd
     
 from cell2location.models.base.pymc3_loc_model import Pymc3LocModel
 
 # defining the model itself
-class LocationModelWTAMultiExperiment(Pymc3LocModel):
+class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
     r""" Here we model the elements of :math:`D` as Negative Binomial distributed,
     given an unobserved rate :math:`mu` and a gene-specific over-dispersion parameter :math:`\alpha_{e,g}`
     which describes variance in expression of individual genes that is not explained by the regulatory programs:
@@ -288,9 +289,9 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
                                            + self.spot_add], axis = 1)
 
             # =====================DATA likelihood ======================= #
-            # Likelihood (sampling distribution) of observations & add overdispersion via NegativeBinomial / Poisson
+            # Likelihood (sampling distribution) of observations & add overdispersion via NegativeBinomial / Poisson            
             self.data_target = pm.NegativeBinomial('data_target', mu=self.mu_biol,
-                               alpha=tt.concatenate([np.repeat(10**10,self.n_npro).reshape(1, self.n_npro),
+                               alpha=tt.concatenate([np.full((self.n_rois, self.n_npro), 10**10),
                                                      pm.math.dot(self.extra_data_tt['spot2sample'], 
                                                                  1 / (self.gene_E * self.gene_E))],
                                                     axis = 1),
