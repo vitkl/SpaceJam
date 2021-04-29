@@ -31,7 +31,7 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
     as the sum of five non-negative components:
     
     .. math::
-        \mu_{s,g} = m_{e,g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
+        \mu_{s,g} = m_{e} m_{g} m_{e,g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
     
     Here, :math:`w_{s,f}` denotes regression weight of each program :math:`f` at location :math:`s` ;
     :math:`g_{f,g}` denotes the regulatory programmes :math:`f` of each gene :math:`g` - input to the model;
@@ -299,7 +299,7 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
 
             # =====================Compute nUMI from each factor in spots  ======================= #                          
             self.nUMI_factors = pm.Deterministic('nUMI_factors',
-                                                 (self.spot_factors * (self.gene_factors * self.gene_level).sum(0)))
+                                                 (self.spot_factors * (self.gene_factors * self.gene_level.T).sum(0)))
             
         
     def compute_expected(self):
