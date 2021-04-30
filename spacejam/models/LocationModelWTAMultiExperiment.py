@@ -187,8 +187,6 @@ class LocationModelWTAMultiExperiment(Pymc3LocModel):
         # assign extra data to dictionary with (1) shared parameters (2) input data
         self.extra_data_tt = {'spot2sample': theano.shared(self.spot2sample_mat.astype(self.data_type))}
         self.extra_data = {'spot2sample': self.spot2sample_mat.astype(self.data_type)}
-           
-        print(np.shape(self.extra_data['spot2sample']))    
             
         ############# Define the model ################
         self.model = pm.Model()

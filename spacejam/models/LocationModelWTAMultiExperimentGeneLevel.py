@@ -294,7 +294,7 @@ class LocationModelWTAMultiExperimentGeneLevel(Pymc3LocModel):
             
             self.nUMI_factors = pm.Deterministic('nUMI_factors',
                                                  (self.spot_factors * (self.gene_factors 
-                                                                       * self.gene_level.mean(0).T).sum(0)))
+                                                                       * self.gene_level.mean(0).reshape((self.n_genes,1))).sum(0)))
             
         
     def compute_expected(self):
@@ -305,7 +305,8 @@ class LocationModelWTAMultiExperimentGeneLevel(Pymc3LocModel):
         # compute the poisson rate
         self.mu = (np.dot(self.samples['post_sample_means']['spot_factors'],
                           self.samples['post_sample_means']['gene_factors'].T)
-                   * self.samples['post_sample_means']['gene_level']
+                   * np.dot(self.extra_data['spot2sample'],
+                            self.samples['post_sample_means']['gene_level'])
                    + np.dot(self.extra_data['spot2sample'],
                             self.samples['post_sample_means']['gene_add']) * self.l_r
                    + self.samples['post_sample_means']['spot_add'])
