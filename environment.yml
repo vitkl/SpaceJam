@@ -38,3 +38,6 @@ dependencies:
     - torch>=1.5.0
     - pyro-ppl>=1.3.1
     - git+https://github.com/BayraktarLab/cell2location.git
+    - diffxpy
+    - adjustText
+    - git+https://github.com/BayraktarLab/CountCorrect/
