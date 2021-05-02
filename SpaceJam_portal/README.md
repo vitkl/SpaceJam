@@ -7,3 +7,9 @@ The main template folder contains template foolder structure and neccesary files
 
 ## Notebooks
 Includes tools used to populate each subdirectory of the portal structure.
+
+
+### Additional work:
+- Browser compatibility: This portal tool is in early development and can be unstable on certain platforms, for best performance, we recommend viewing the pot on Chrome browsers.
+
+- Improved tool integration (auto ROI selection from main plot, and auto update of metadata)
