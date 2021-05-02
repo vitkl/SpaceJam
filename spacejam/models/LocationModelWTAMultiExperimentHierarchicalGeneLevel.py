@@ -282,11 +282,13 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
             # =====================Expected expression ======================= #
             # Expected counts for negative probes and gene probes concatenated into one array. Note that non-specific binding
             # scales linearly with the total number of counts (l_r) in this model.
-            self.mu_biol = tt.concatenate([self.y_rn, pm.math.dot(self.spot_factors, self.gene_factors.T) \
-                                           * self.gene_level * self.gene_level_e \
-                                           * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level_independent) \
-                                           + pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_add) * self.l_r \
-                                           + self.spot_add], axis = 1)
+            mu_biol = pm.math.dot(self.spot_factors, self.gene_factors.T) \
+            * self.gene_level \
+            * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level_e) \
+            * pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_level_independent) \
+            + pm.math.dot(self.extra_data_tt['spot2sample'], self.gene_add) * self.l_r \
+            + self.spot_add
+            self.mu_biol = tt.concatenate([self.y_rn, mu_biol], axis = 1)
 
             # =====================DATA likelihood ======================= #
             # Likelihood (sampling distribution) of observations & add overdispersion via NegativeBinomial / Poisson            
@@ -311,7 +313,8 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
         self.mu = (np.dot(self.samples['post_sample_means']['spot_factors'],
                           self.samples['post_sample_means']['gene_factors'].T)
                    * self.samples['post_sample_means']['gene_level']
-                   * self.samples['post_sample_means']['gene_level_e']
+                   * np.dot(self.extra_data['spot2sample'],
+                            self.samples['post_sample_means']['gene_level_e'])
                    * np.dot(self.extra_data['spot2sample'],
                             self.samples['post_sample_means']['gene_level_independent'])
                    + np.dot(self.extra_data['spot2sample'],
