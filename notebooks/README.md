@@ -25,6 +25,6 @@ Contains notebooks and scripts written in R and python for SpaceJam
 #### 07 ::
 -
 
-Kleshchevnikov et al. 2020: "Comprehensive mapping of tissue cell architecture via integrated single cell and spatial transcriptomics." bioRxiv.
-Stewart et al. 2019, et al. "Spatiotemporal immune zonation of the human kidney." Science 365.6460: 1461-1466.
-Roberts &  Aivazidis et al., "Transcriptome-wide spatial RNA profiling maps the cellular architecture of the developing human neocortex." bioRxiv (2021).
+Kleshchevnikov et al. 2020: "Comprehensive mapping of tissue cell architecture via integrated single cell and spatial transcriptomics." bioRxiv. <br/>
+Stewart et al. 2019: "Spatiotemporal immune zonation of the human kidney." Science 365.6460: 1461-1466. <br/>
+Roberts &  Aivazidis et al. 2021: "Transcriptome-wide spatial RNA profiling maps the cellular architecture of the developing human neocortex." bioRxiv. <br/>
