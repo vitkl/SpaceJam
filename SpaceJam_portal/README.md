@@ -37,3 +37,6 @@ Includes tools used to populate each subdirectory of the portal structure.
 ### Known Issues:
 - Browser compatibility issues observed with IE versions < 8.0
 - Occasional erros with autoscale on histology sections causes them to appear very small
+
+Visit our portal here:  (https://www.spacejam.tech/)
+![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/Screenshot%202021-05-03%20at%2022.04.00.png)
