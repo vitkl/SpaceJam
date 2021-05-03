@@ -3,7 +3,8 @@ This directory contains open-source code and template files to create a simple p
 (http://nanostring-public-share.s3-website-us-west-2.amazonaws.com/GeoScriptHub/KidneyDataset/)
 
 ## Feature list
-- 
+    Apps:
+    - 
 
 ## Main_template
 The main template folder contains template foolder structure and neccesary files for each tool written in php, HTML, javascript and CSS. 
