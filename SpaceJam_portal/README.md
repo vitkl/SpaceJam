@@ -12,4 +12,8 @@ Includes tools used to populate each subdirectory of the portal structure.
 ### Future work:
 - Browser compatibility: This portal tool is in early development and can be unstable on certain platforms, for best performance, we recommend viewing the pot on Chrome browsers.
 - Hook to show ROI statistics when an ROI is selected.
-- Improved tool integration (auto ROI selection from main plot, and auto update of metadata)
+- Improved tool integration (auto update of metadata)
+- Allow user to select ROI by highlighting on the overall histology map
+
+### Known Issues:
+- Browser compatibility issues observed with IE versions < 8.0
