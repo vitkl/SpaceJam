@@ -1,5 +1,4 @@
 ![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png)
-# SpaceJam
 
 Visit our interactive analysis portal here! (https://www.spacejam.tech/)
 
@@ -16,6 +15,7 @@ This Repository contains open-source code, notebooks and template files to analy
 #### SpaceJam Portal ::
 - Contains notebooks in python and HTML,CSS,Javascript template files for creating an onine, interactive data exploration platform for Nanostring and Spacejam outputs.
 
+# SpaceJam
 
 ## Inspiration
 Nanostring WTA provides an incredible amount of information in their data. Our goal was to extract insights from this abundance with a focus on precise details rather than general conclusions.
