@@ -1,6 +1,5 @@
 # Main portal template
-
-- Contains the template to build and host the spacejam portal.
+Contains the template to build and host the spacejam portal.
 
 #### Index.php
 - This contains the main content holder of the web app
