@@ -1,3 +1,4 @@
+![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png)
 # SpaceJam
 
 Visit our interactive analysis portal here! (https://www.spacejam.tech/)
