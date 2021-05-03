@@ -1,5 +1,5 @@
 # Summary
-This directory contains open-source code and template files to create a simple portal viewer by combining miltiple readily available tools for the Kidney Nanostring data.
+This directory contains open-source code and template files to create a simple portal viewer by combining multiple published and internally developed tools for the Kidney Nanostring data.
 (http://nanostring-public-share.s3-website-us-west-2.amazonaws.com/GeoScriptHub/KidneyDataset/)
 
 ## Feature list
