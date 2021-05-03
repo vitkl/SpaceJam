@@ -14,7 +14,7 @@ Contains notebooks and scripts written in R and python for SpaceJam
 - These notebooks visualize the cell type density estimates returned from our cell2location models.
 
 #### 04 ::
--
+- These two notebooks remove background from the nanostringWTA data using our recently developed CountCorrect model introduced in the brain development preprint (Roberts &  Aivazidis et al. 2021). In the "04_countcorrect_getCorrectedDataMatrix_forCPU.ipynb" notebook we further provide the option for user without GPU to run CountCorrect faster (for less iterations) or use a quick naive background correction. 
 
 #### 05 ::
 -
