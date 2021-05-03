@@ -31,7 +31,7 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
     as the sum of five non-negative components:
     
     .. math::
-        \mu_{s,g} = m_{e,g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
+        \mu_{s,g} = m_{g} m_{e} m_{e,g} \left (\sum_{f} {w_{s,f} \: g_{f,g}} \right) + l_s + s_{e,g}*totalCounts_s
     
     Here, :math:`w_{s,f}` denotes regression weight of each program :math:`f` at location :math:`s` ;
     :math:`g_{f,g}` denotes the regulatory programmes :math:`f` of each gene :math:`g` - input to the model;
@@ -137,7 +137,7 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
             verbose=True,
             var_names=None, var_names_read=None,
             obs_names=None, fact_names=None, sample_id=None,
-            gene_level_prior={'mean': 1 / 2, 'sd': 1 / 4},
+            gene_level_prior={'mean': 1 / 2, 'sd': 1 / 4, 'sample_alpha': 2},
             gene_level_var_prior={'mean_var_ratio': 1},
             cell_number_prior={'cells_per_spot': 8,
                                'factors_per_spot': 7,
@@ -230,7 +230,8 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
             self.gene_level_independent = pm.Gamma('gene_level_independent', 
                                                    100, 100, shape=(self.n_exper, self.n_genes))
             # experiment specific capture efficiency (wide prior around 1)
-            self.gene_level_e = pm.Gamma('gene_level_e', 5, 5, shape=(self.n_exper, 1))
+            self.gene_level_e = pm.Gamma('gene_level_e', gene_level_prior['sample_alpha'],
+                                         gene_level_prior['sample_alpha'], shape=(self.n_exper, 1))
 
             self.gene_factors = pm.Deterministic('gene_factors', self.cell_state)
 
