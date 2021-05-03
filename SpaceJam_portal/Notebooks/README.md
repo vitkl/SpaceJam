@@ -6,4 +6,5 @@
 #### 2_A1_V1_ROI_image_downsampler.ipynb ::
 - ROI image resizing and thumbail generation and organisation of ROI files to be placed in "template/DR_plots/categories"
 
-- 3 - 
+#### 3 ::
+- 
