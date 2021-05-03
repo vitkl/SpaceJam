@@ -8,7 +8,7 @@ Contains notebooks and scripts written in R and python for SpaceJam
 - Here we estimate cell type gene expression signatures from a public single-cell RNAseq dataset (Stewart et al. 2019). In the "01_cell2location_estimating_signatures.ipynb" notebook we use our Negative Binomial regression model to perform this task. We introduced this model in the recent cell2location preprint (Kleshchevnikov et al. 2020). In the "01_spatialDecon_estimating_signatures.ipynb" notebook we simply calculate the average gene expression across one cell type and use this later for the SpatialDecon algorithm.
 
 #### 02 ::
-- These two notebooks map celltypes to the nanostring WTA data.a
+- These two notebooks map celltypes to the nanostring WTA data. In the "02_cell2location_map_celltypes_allModels.ipynb" notebook we use three new variants of our cell2location model to perform this task. These variants are extensions of the models introduced in our cell2location preprint (Kleshchevnikov et al. 2020) and brain development preprint (Roberts &  Aivazidis et al. 2021) particularly suited to map the multi slide dataset in this hackathon.
 
 #### 03 ::
 -
@@ -27,3 +27,4 @@ Contains notebooks and scripts written in R and python for SpaceJam
 
 Kleshchevnikov et al. 2020: "Comprehensive mapping of tissue cell architecture via integrated single cell and spatial transcriptomics." bioRxiv.
 Stewart et al. 2019, et al. "Spatiotemporal immune zonation of the human kidney." Science 365.6460: 1461-1466.
+Roberts &  Aivazidis et al., "Transcriptome-wide spatial RNA profiling maps the cellular architecture of the developing human neocortex." bioRxiv (2021).
