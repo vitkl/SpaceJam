@@ -20,3 +20,4 @@ Includes tools used to populate each subdirectory of the portal structure.
 
 ### Known Issues:
 - Browser compatibility issues observed with IE versions < 8.0
+- Occasional erros with autoscale on histology sections causes them to appear very small
