@@ -11,7 +11,7 @@ Contains notebooks and scripts written in R and python for SpaceJam
 - These two notebooks map celltypes to the nanostring WTA data. In the "02_cell2location_map_celltypes_allModels.ipynb" notebook we use three new variants of our cell2location model to perform this task. These variants are extensions of the models introduced in our cell2location preprint (Kleshchevnikov et al. 2020) and brain development preprint (Roberts &  Aivazidis et al. 2021) particularly suited to model the multi slide Nanostring WTA dataset in this hackathon. For comparison we also map cell types using the SpatialDecon algorithm in the second notebook called "02_spatialDecon_map_celltypes.R".
 
 #### 03 ::
--
+- These notebooks visualize the cell type density estimates returned from our cell2location models.
 
 #### 04 ::
 -
