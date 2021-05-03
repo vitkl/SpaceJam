@@ -1,11 +1,15 @@
 name: spacejam
 channels:
   - conda-forge
-  - bioconda
   - defaults
+  - bioconda
 dependencies:
   - python = 3.7
   - pip
+  - rpy2
+  - r-base
+  - r-lme4
+  - r-data.table
   - pytest >= 6.2.2
   - numpy >= 1.18.5
   - pandas >= 1.0.4
@@ -29,8 +33,6 @@ dependencies:
   - mkl-service >= 2.3.0
   - pygpu >= 0.7.6
   - cython >= 0.29.17
-  - r-base
-  - r-lme4
   - pip:
     - plotnine==0.7.0
     - arviz==0.10.0
