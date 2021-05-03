@@ -1,10 +1,10 @@
 # Summary ::
 Contains notebooks and scripts written in R and python for SpaceJam
 
-#### 00 ::
+#### 00_ConstructAnnDataObject.ipynb ::
 - This notebook constructs an anndata object from the provided NanostringWTA data.
 
-#### 01 ::
+#### 01_cell2location_estimating_signatures.ipynb, 01_spatialDecon_estimating_signatures.ipynb::
 - Here we estimate cell type gene expression signatures from a public single-cell RNAseq dataset (Stewart et al. 2019). In the "01_cell2location_estimating_signatures.ipynb" notebook we use our Negative Binomial regression model to perform this task. We introduced this model in the recent cell2location preprint (Kleshchevnikov et al. 2020). In the "01_spatialDecon_estimating_signatures.ipynb" notebook we simply calculate the average gene expression across one cell type and use this later for the SpatialDecon algorithm.
 
 #### 02 ::
