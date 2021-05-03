@@ -32,3 +32,7 @@ Of particular interest is that the model predicts very well the characteristic c
 
 ## What's next for SpaceJam
 Now we’re looking into further integrating different parts of our web portal to provide an even more smooth and productive way for scientists to work with GeoMx data. We believe that better visualisations could inspire and facilitate great biological discoveries! 
+
+
+Visit our portal here:  (https://www.spacejam.tech/)
+![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/Screenshot%202021-05-03%20at%2022.04.00.png)
