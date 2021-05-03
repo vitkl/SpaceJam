@@ -137,7 +137,7 @@ class LocationModelWTAMultiExperimentHierarchicalGeneLevel(Pymc3LocModel):
             verbose=True,
             var_names=None, var_names_read=None,
             obs_names=None, fact_names=None, sample_id=None,
-            gene_level_prior={'mean': 1 / 2, 'sd': 1 / 4, 'sample_alpha': 2},
+            gene_level_prior={'mean': 1 / 2, 'sd': 1 / 4, 'sample_alpha': 20},
             gene_level_var_prior={'mean_var_ratio': 1},
             cell_number_prior={'cells_per_spot': 8,
                                'factors_per_spot': 7,
