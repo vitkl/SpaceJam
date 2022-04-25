@@ -1,6 +1,6 @@
 ![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png)
 
-Visit our interactive analysis portal here! (https://www.spacejam.tech/)
+Visit our interactive analysis portal here! (https://developmentcellatlas.ncl.ac.uk/Demo/nanostring_demo/A1_V1_proto_nanostring_portal/index.php?cat=Disease)
 
 
 
