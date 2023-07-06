@@ -1,8 +1,10 @@
-![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png) (no longer supported)
+![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png)
 
+(no longer supported)
 Visit our interactive analysis portal here! (https://developmentcellatlas.ncl.ac.uk/Demo/nanostring_demo/A1_V1_proto_nanostring_portal/index.php?cat=Disease) (no longer supported)
 
-
+## NanoString Spatial Omics Hackathon winners::
+![alt text]([https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png](https://github.com/vitkl/SpaceJam/blob/main/Screenshot%202023-07-06%20at%2015.43.21.png))
 
 ## Summary ::
 This Repository contains open-source code, notebooks and template files to analyse the Kidney Nanostring data by combining multiple published and internally developed tools for the 
