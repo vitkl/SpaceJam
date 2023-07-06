@@ -1,6 +1,6 @@
-![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png)
+![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/spacejam_icon.png) (no longer supported)
 
-Visit our interactive analysis portal here! (https://developmentcellatlas.ncl.ac.uk/Demo/nanostring_demo/A1_V1_proto_nanostring_portal/index.php?cat=Disease)
+Visit our interactive analysis portal here! (https://developmentcellatlas.ncl.ac.uk/Demo/nanostring_demo/A1_V1_proto_nanostring_portal/index.php?cat=Disease) (no longer supported)
 
 
 
@@ -34,5 +34,5 @@ Of particular interest is that the model predicts very well the characteristic c
 Now we’re looking into further integrating different parts of our web portal to provide an even more smooth and productive way for scientists to work with GeoMx data. We believe that better visualisations could inspire and facilitate great biological discoveries! 
 
 
-Visit our portal here:  (https://www.spacejam.tech/)
+Visit our portal here:  (https://www.spacejam.tech/) (no longer supported)
 ![alt text](https://github.com/vitkl/SpaceJam/blob/main/logos/Screenshot%202021-05-03%20at%2022.04.00.png)
